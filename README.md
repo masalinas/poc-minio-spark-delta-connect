@@ -1,6 +1,25 @@
 # Description
 Integrate Minio with Spark Delta Lake and Spark Connect. Test with a Spark Driver
 
+# Steps
+
+You must start these services
+
+Start Minio Service
+```
+$ docker run -d \
+  --name spark-minio \
+  --network spark-net \
+  -p 9000:9000 \
+  -p 9001:9001 \
+  -e MINIO_ROOT_USER=admin \
+  -e MINIO_ROOT_PASSWORD=password \
+  -v minio-data:/data \
+  minio/minio:latest \
+  server /data --console-address ":9001"
+```
+
+Start Spark Master Service
 ```
 $ docker run -d \
   --name spark-master \
@@ -17,6 +36,7 @@ $ docker run -d \
   "
 ```
 
+Start Spark Worker Service
 ```
 $ docker run -d \
     --name spark-worker \
