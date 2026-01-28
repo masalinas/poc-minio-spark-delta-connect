@@ -1,7 +1,7 @@
 # Description
 Integrate Minio with Spark Delta Lake and Spark Connect. Test with a Spark Driver
 
-# Steps
+## Steps
 
 You must start these services
 
