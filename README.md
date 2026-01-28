@@ -51,5 +51,22 @@ $ docker run -d \
     "
 ```
 
+You can check the UIs of Minio and Spark:
+
+Minio UI
+```
+http://localhost:9001/browser/delta-bucket
+```
+
+Spark Master UI
+```
+http://localhost:8080/
+```
+
+Spark Worker UI
+```
+http://localhost:8081/
+```
+
 ## Links 
 - [Spark Docker Hub])https://hub.docker.com/_/spark)
