@@ -1,6 +1,8 @@
+import time
 from datetime import datetime, date
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
+from pyspark.sql.functions import col
 
 builder = SparkSession.builder.appName("spark_connect_app") \
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
@@ -19,10 +21,25 @@ df = spark.createDataFrame(
 )
 
 # Write Delta Table to Minio
-df.write.mode("overwrite").format("delta").save("s3a://delta-bucket/my_table")
+#df.write.mode("overwrite").format("delta").save("s3a://delta-bucket/my_table")
 
 # Read Delta Table from Minio
-df = spark.read.format("delta").load("s3a://delta-bucket/my_table")
+start_time = time.process_time()
+#df = spark.read.format("delta").load("s3a://delta-bucket/my_table")
+
+df = (
+    spark.read.format("delta")
+    .load("s3a://genomic/gene-expression")
+    .where(col("sample_id") == "TCGA-E7-A7DV")
+)
 
 # Display Delta Table
 df.show()
+
+pdf = df.toPandas()
+print(pdf.shape)
+end_time= time.process_time()
+
+print(end_time - start_time, " seconds")
+
+spark.stop()
