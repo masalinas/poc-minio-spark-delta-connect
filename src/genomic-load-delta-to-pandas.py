@@ -4,6 +4,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from pyspark.sql.functions import col
 
+# Create Remote Spark Session from Spark Connect
 builder = SparkSession.builder.appName("spark_connect_app") \
     .remote("sc://localhost:15002")
 
