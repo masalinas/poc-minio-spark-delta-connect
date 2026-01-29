@@ -83,15 +83,21 @@ $ docker run -d \
 
 You can check the UIs of Minio and Spark:
 
+![Spark Docker Services](./images/docker_services_02.png "Spark Docker Services")
+
 Minio UI
 ```
 http://localhost:9001/browser/delta-bucket
 ```
 
+![Minio Delta Table](./images/minio_delta_table.png "Minio Delta Table")
+
 Spark Master UI
 ```
 http://localhost:8080/
 ```
+
+![Spark Master UI](./images/spark_master.png "Spark Master UI")
 
 Spark Worker UI
 ```
@@ -101,7 +107,8 @@ http://localhost:8081/
 ![Spark Worker UI](./images/spark_worker.png "Spark Worker UI")
 
 ## Notes
-Actually exist a `spark-client` implement only Spark Connect. Maybe unistalling pyspark and use this light version could works too using Spark Connect clients delegating all work to Spark Master.
+Actually exist a `spark-client` [python package](https://pypi.org/project/pyspark-client/) implement only Spark Connect. Maybe unistalling pyspark and use this light version could works too using Spark Connect clients delegating all work to Spark Master.
 
 ## Links 
-- [Spark Docker Hub])https://hub.docker.com/_/spark)
+- [Spark Docker Hub](https://hub.docker.com/_/spark)
+- [spark Session Configuration ](https://spark.apache.org/docs/latest/configuration.html)
