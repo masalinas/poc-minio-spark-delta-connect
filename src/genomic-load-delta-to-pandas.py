@@ -10,9 +10,9 @@ builder = SparkSession.builder.appName("spark_connect_app") \
 
 spark = builder.getOrCreate()
 
+# Read Delta Table from Minio using spark connect
 start_time = time.process_time()
 
-# Read Delta Table from Minio using spark connect
 df = (
     spark.read.format("delta")
     .load("s3a://genomic/gene-expression")
