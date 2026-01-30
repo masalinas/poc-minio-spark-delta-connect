@@ -25,8 +25,8 @@ print("Dataset shape: " + str(pdf.shape))
 
 print(pdf.head(5))
 
-end_time= time.process_time()
-print("Time spent: " + str(end_time - start_time) + " seconds")
-
 # Stop spark
 spark.stop()
+
+end_time= time.process_time()
+print("Time spent: " + str(end_time - start_time) + " seconds")
