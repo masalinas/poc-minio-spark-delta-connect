@@ -42,7 +42,7 @@ You must start these services
   $ docker network create spark-net
   ```
 
-- Build Spark Master image. We must create a custom Spark Image, because we must include Deta Lake and Minio S3 Connector dependencies and configuration all of them:
+- Build Spark Master image. We must create a custom Spark Image, because we must include Spark Connector, Spark Deta Lake and Minio Hadoop Connector dependencies and configure Spark Session for all of them:
 
   ```
   $ docker build -t spark:3.5.0-python3-connect .
