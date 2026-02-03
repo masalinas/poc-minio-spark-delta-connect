@@ -19,6 +19,11 @@ df = (
 
 df.show()
 
+end_time= time.process_time()
+print("Time spent: " + str(end_time - start_time) + " seconds")
+
+start_time = time.process_time()
+
 # convert to Pandas
 pdf = df.toPandas()
 print("Dataset shape: " + str(pdf.shape))
