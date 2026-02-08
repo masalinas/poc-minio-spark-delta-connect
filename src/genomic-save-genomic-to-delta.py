@@ -8,10 +8,8 @@ H5_FILE = "/Users/miguel/Temp/genomic/df_data.hdf"
 BUCKET = "genomic"
 DELTA_TABLE = "test-expression"
 
-builder = SparkSession.builder.appName("spark_connect_gen") \
-    .remote("sc://localhost:15002")
-
-spark = builder.getOrCreate()
+spark = SparkSession.builder.appName("spark_connect_gen") \
+    .remote("sc://localhost:15002").getOrCreate()
 
 print("🟢 Read H5 Dataset")
 pdf = pd.read_hdf(H5_FILE)
@@ -34,7 +32,7 @@ num_chunks = math.ceil(total_rows / CHUNK_SIZE)
 start_total = time.time()
 
 for i in range(num_chunks):
-    loop_start = time.time()
+    loop_start = time.perf_counter()
 
     # Slice wide Pandas
     start = i * CHUNK_SIZE
@@ -81,7 +79,7 @@ for i in range(num_chunks):
             .save(path)
     )
 
-    loop_end = time.time()
+    loop_end = time.perf_counter()
 
     # Progress log
     loop_time = loop_end - loop_start

@@ -4,10 +4,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from pyspark.sql.functions import col
 
-builder = SparkSession.builder.appName("spark_connect_app") \
-    .remote("sc://localhost:15002")
-
-spark = builder.getOrCreate()
+spark = SparkSession.builder.appName("spark_connect_app") \
+    .remote("sc://localhost:15002").getOrCreate()
 
 # Create a DataFrame
 df = spark.createDataFrame(
@@ -18,7 +16,7 @@ df = spark.createDataFrame(
     ]
 )
 
-start_time = time.process_time()
+start_time = time.perf_counter()
 
 # Write Delta Table to Minio using Spark Connect
 df.write.mode("overwrite").format("delta").save("s3a://delta-bucket/my_table")
@@ -28,7 +26,7 @@ df = spark.read.format("delta").load("s3a://delta-bucket/my_table")
 
 df.show()
 
-end_time= time.process_time()
+end_time= time.perf_counter()
 print(end_time - start_time, " seconds")
 
 # Stop spark
