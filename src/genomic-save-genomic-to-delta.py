@@ -29,7 +29,7 @@ path = "s3a://" + BUCKET + "/" + DELTA_TABLE
 CHUNK_SIZE = 100
 total_rows = pdf.shape[0]
 num_chunks = math.ceil(total_rows / CHUNK_SIZE)
-start_total = time.time()
+start_total = time.perf_counter()
 
 print("Num chunks: " + str(num_chunks))
 
