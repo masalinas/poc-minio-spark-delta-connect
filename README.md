@@ -106,7 +106,7 @@ In docker 28.1.1 (Ubuntu 24.04)
       -p 8081:8081 \
       -v $PWD/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf \
       --network spark-net \
-      spark:3.5.0-python3 \
+      spark:3.5.0-python3-connect \
         bash -c "
           /opt/spark/sbin/start-worker.sh \
           spark://spark-master:7077 && \
@@ -132,12 +132,12 @@ In docker 28.1.1 (Ubuntu 24.04)
   $ docker run -it \
       --name spark-mock-job \
       --rm \
-      -v $PWD/src/genomic-save-delta.py:/jobs/genomic-save-delta.py \
+      -v $PWD/src/genomic-job-mock-to-delta.py:/jobs/genomic-job-mock-to-delta.py \
       --network spark-net \
       spark:3.5.0-python3-supply \
         /opt/spark/bin/spark-submit \
         --master spark://spark-master:7077 \
-        /jobs/genomic-save-delta.py
+        /jobs/genomic-job-mock-to-delta.py
   ```      
 
 You can check the UIs of Minio and Spark:
