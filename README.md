@@ -48,7 +48,27 @@ You must start these services
   $ docker build -t spark:3.5.0-python3-connect .
   ```
 
+  ```
+  $ docker build -t spark:3.5.0-python3-supply .
+  ```
+
 - Start Spark Master Service
+    
+In docker 20.10.5 (Ubuntu 20.04), we must use a older minio version to start:
+  ```
+  $ docker run -d \
+    --name spark-minio \
+    --network spark-net \
+    -p 9000:9000 \
+    -p 9001:9001 \
+    -e MINIO_ROOT_USER=admin \
+    -e MINIO_ROOT_PASSWORD=password \
+    -v minio-data:/data \
+    minio/minio:RELEASE.2025-01-20T14-49-07Z \
+      server --console-address ":9001" /data 
+  ```
+
+In docker 28.1.1 (Ubuntu 24.04)
   ```
   $ docker run -d \
     --name spark-minio \
@@ -59,7 +79,7 @@ You must start these services
     -e MINIO_ROOT_PASSWORD=password \
     -v minio-data:/data \
     minio/minio:latest \
-    server /data --console-address ":9001"
+      server --console-address ":9001" /data 
   ```
 
 - Start Spark Master Service
@@ -72,27 +92,53 @@ You must start these services
     -p 15002:15002 \
     -v $PWD/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf \
     spark:3.5.0-python3-connect \
-    bash -c "
-      /opt/spark/sbin/start-master.sh && \
-      /opt/spark/sbin/start-connect-server.sh && \
-      tail -f /opt/spark/logs/*
-    "
+      bash -c "
+        /opt/spark/sbin/start-master.sh && \
+        /opt/spark/sbin/start-connect-server.sh && \
+        tail -f /opt/spark/logs/*
+      "
 ```
 
 - Start Spark Worker Service
   ```
   $ docker run -d \
       --name spark-worker \
-      --network spark-net \
       -p 8081:8081 \
       -v $PWD/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf \
+      --network spark-net \
       spark:3.5.0-python3 \
-      bash -c "
-        /opt/spark/sbin/start-worker.sh \
-        spark://spark-master:7077 && \
-        tail -f /opt/spark/logs/*
-      "
+        bash -c "
+          /opt/spark/sbin/start-worker.sh \
+          spark://spark-master:7077 && \
+          tail -f /opt/spark/logs/*
+        "
   ```
+
+- Submit Spark Driver App
+  ```
+  $ docker run -it \
+      --name spark-genomic-job \
+      --rm \
+      -v $PWD/src/genomic-job-genomic-to-delta.py:/jobs/genomic-job-genomic-to-delta.py \
+      -v $PWD/datasets/df_data.hdf:/jobs/datasets/df_data.hdf \
+      --network spark-net \
+      spark:3.5.0-python3-supply \
+        /opt/spark/bin/spark-submit \
+        --master spark://spark-master:7077 \
+        /jobs/genomic-job-genomic-to-delta.py
+  ```
+
+  ```
+  $ docker run -it \
+      --name spark-mock-job \
+      --rm \
+      -v $PWD/src/genomic-save-delta.py:/jobs/genomic-save-delta.py \
+      --network spark-net \
+      spark:3.5.0-python3-supply \
+        /opt/spark/bin/spark-submit \
+        --master spark://spark-master:7077 \
+        /jobs/genomic-save-delta.py
+  ```      
 
 You can check the UIs of Minio and Spark:
 

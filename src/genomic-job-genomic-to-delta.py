@@ -3,13 +3,28 @@ import math
 import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, FloatType
+from delta import configure_spark_with_delta_pip
 
-H5_FILE = "/Users/miguel/Temp/genomic/df_data.hdf"
+H5_FILE = "/jobs/datasets/df_data.hdf"
 BUCKET = "genomic"
 DELTA_TABLE = "test-expression"
 
-spark = SparkSession.builder.appName("spark_connect_gen") \
-    .remote("sc://localhost:15002").getOrCreate()
+# Configure Spark Session with AWS(Minio) support
+builder = SparkSession.builder.appName("minio_job") \
+    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
+    .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+
+spark = configure_spark_with_delta_pip(builder, extra_packages=["org.apache.hadoop:hadoop-aws:3.3.4"]).getOrCreate()
+
+# Configure Spark Session AWS(Minio) connection
+sc = spark.sparkContext
+
+sc._jsc.hadoopConfiguration().set("fs.s3a.access.key", "admin")
+sc._jsc.hadoopConfiguration().set("fs.s3a.secret.key", "password")
+sc._jsc.hadoopConfiguration().set("fs.s3a.endpoint", "http://spark-minio:9000")
+sc._jsc.hadoopConfiguration().set("fs.s3a.path.style.access", "true")
+sc._jsc.hadoopConfiguration().set("fs.s3a.connection.ssl.enabled", "false")
+sc._jsc.hadoopConfiguration().set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 
 print("🟢 Read H5 Dataset")
 pdf = pd.read_hdf(H5_FILE)
@@ -60,22 +75,15 @@ for i in range(num_chunks):
     pdf_long = pdf_long[pdf_long["expression"] != 0]
     pdf_long["expression"] = pdf_long["expression"].astype(float)
 
-    #data = {
-    #    "calories": [420, 380, 390],
-    #    "duration": [50, 40, 45]
-    #}
-
-    #load data into a DataFrame object:
-    #df = pd.DataFrame(data)
-
     # Pandas → Spark
     print("🟢 Create Spark Chunk Dataframe from Pandas")
     spark_df = spark.createDataFrame(pdf_long, schema=schema)
-    #spark_df1 = spark.createDataFrame(df)
 
+    # Append to Delta
     print("🟢 Append Chunk Dataframe to Delta")
     (
         spark_df
+            .repartition(4)
             .write
             .mode("append")            
             .format("delta")

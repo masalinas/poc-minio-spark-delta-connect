@@ -6,7 +6,7 @@ from pyspark.sql.functions import col
 
 print("🟢 Create spark Session from job container")
 spark = SparkSession.builder.appName("spark_connect_app") \
-    .remote("sc://localhost:15002").getOrCreate()
+    .remote("sc://spark-master:15002").getOrCreate()
 
 # Create a DataFrame
 print("🟢 Create mock Dataframe")
