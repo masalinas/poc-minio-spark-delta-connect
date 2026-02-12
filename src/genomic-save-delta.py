@@ -18,7 +18,7 @@ df = spark.createDataFrame(
     ]
 )
 
-start_time = time.process_time()
+start_time = time.perf_counter()
 
 # Write Delta Table to Minio using Spark Connect
 print("🟢 Write Dataframe to Delta tables")
@@ -30,7 +30,7 @@ df = spark.read.format("delta").load("s3a://delta-bucket/my_table")
 
 df.show()
 
-end_time= time.process_time()
+end_time= time.perf_counter()
 print(end_time - start_time, " seconds")
 
 # Stop spark

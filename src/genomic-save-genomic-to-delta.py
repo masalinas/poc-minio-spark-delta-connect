@@ -34,7 +34,7 @@ start_total = time.time()
 print("Num chunks: " + str(num_chunks))
 
 for i in range(num_chunks):
-    loop_start = time.time()
+    loop_start = time.perf_counter()
 
     # Slice wide Pandas
     start = i * CHUNK_SIZE
@@ -82,7 +82,7 @@ for i in range(num_chunks):
             .save(path)
     )
 
-    loop_end = time.time()
+    loop_end = time.perf_counter()
 
     # Progress log
     loop_time = loop_end - loop_start
