@@ -4,9 +4,10 @@ USER root
 RUN apt-get update
 RUN apt-get install -y curl
 
-# all spark application dependencies
+# all python spark dependencies (we must add pyspark too because delta spark install newer versions not compatible with scala)
 RUN pip install delta-spark==3.1.0 pyspark==3.5.0 pandas tables
 
+# all java spark dependencies
 USER spark
 RUN curl https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.1.0/delta-spark_2.12-3.1.0.jar --output /opt/spark/jars/delta-spark_2.12-3.1.0.jar
 RUN curl https://repo1.maven.org/maven2/io/delta/delta-storage/3.1.0/delta-storage-3.1.0.jar -o /opt/spark/jars/delta-storage-3.1.0.jar
