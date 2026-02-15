@@ -6,11 +6,12 @@ from pyspark.sql.functions import col
 from delta import configure_spark_with_delta_pip
 
 print("🟢 Configure Spark Session with AWS(Minio) support")
-builder = SparkSession.builder.appName("minio_job") \
+builder = SparkSession.builder.appName("spark_job_save_mock") \
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
 
-spark = configure_spark_with_delta_pip(builder, extra_packages=["org.apache.hadoop:hadoop-aws:3.3.4"]).getOrCreate()
+spark = configure_spark_with_delta_pip(builder, extra_packages=["org.apache.hadoop:hadoop-aws:3.3.4"]) \
+    .getOrCreate()
  
 print("🟢 Configure Spark Session AWS(Minio) connection")
 sc = spark.sparkContext
