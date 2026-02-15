@@ -136,7 +136,7 @@ $ docker run -it \
 
 You can check the UIs of Minio and Spark:
 
-![Spark Docker Services](./images/docker_services_02.png "Spark Docker Services")
+![Spark Docker Services](./images/docker_services.png "Spark Docker Services")
 
 Minio UI
 ```
