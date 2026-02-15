@@ -209,6 +209,8 @@ $ docker run -d \
 ## Notes
 Actually exist a `spark-client` [python package](https://pypi.org/project/pyspark-client/) implement only Spark Connect, but the minimum version is 4.0.0. Unistalling pyspark 3.5.0 and use this light version could works. But you must refactor the Dockerfile to get the compatible jar files with this new Spark Connect 4.0.0 version.
 
+If you want execute locally some spark apps, you have a requirements.txt file to create a virtual environment and execute them
+
 ## Links 
 - [Spark Docker Hub](https://hub.docker.com/_/spark)
 - [Spark Session Configuration ](https://spark.apache.org/docs/latest/configuration.html)
