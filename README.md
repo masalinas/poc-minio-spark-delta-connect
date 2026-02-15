@@ -177,17 +177,25 @@ http://localhost:8082/
 ## Load Data
 After ingest the dataset into a delta table we can analyze and make some sql queries:
 
-```
-docker run -it \
-  --name job-genomic-load \
-  --rm \
-  -v $PWD/src/genomic-job-load-delta-to-pandas.py:/jobs/genomic-job-load-delta-to-pandas.py \
-  --network spark-net \
-  spark-submit:3.5.0-python3 \
-    /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /jobs/genomic-job-load-delta-to-pandas.py
-```
+- First we will create a submit custom image like this:
+
+  ```
+  $ docker build -t spark-submit:3.5.0-python3 .
+  ```
+
+- Second We can submit our Spark App:
+
+  ```
+  docker run -it \
+    --name job-genomic-load \
+    --rm \
+    -v $PWD/src/genomic-job-load-delta-to-pandas.py:/jobs/genomic-job-load-delta-to-pandas.py \
+    --network spark-net \
+    spark-submit:3.5.0-python3 \
+      /opt/spark/bin/spark-submit \
+      --master spark://spark-master:7077 \
+      /jobs/genomic-job-load-delta-to-pandas.py
+  ```
 
 ## Spark connect
 Also we have some sample of using Spark connect. For it we create a master connect docker image with Spark Connect and S3 integration for it:
