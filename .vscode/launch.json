@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-          "name": "PoC Minio Spark Connect",
+          "name": "PoC Spark Connect",
           "type": "debugpy",
           "request": "launch",
           "program": "${file}",
