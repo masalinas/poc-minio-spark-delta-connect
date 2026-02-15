@@ -1,4 +1,4 @@
-# Description
+# Description
 In this repo we will create a Spark Docker Cluster integrated with Minio and Spark Table. To check the capacity of the cluster we will ingest a big csv file representing a genomic expression of several patients. Also we present Spark connect and some samples deployes on docker too.
 
 ## Infrastructure 
