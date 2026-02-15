@@ -128,19 +128,27 @@ sample_id | cancer | tumor | gene | expression
 
 This transformation will be executed in parallel by all spark workers in batches before ingest the result in the minio delta table. This parallel process of transformation and ingestion accelerate the execution of the pipeline considerably. Using two nodes we can trasnform and ingest 170917803 rows in 7.2 minutes in my Mac M1 laptop in a minio delta table called genomic/gene-expression
 
-To execute the ingestion we will use a docker submitter. We execute this command:
+To execute the ingestion we will use a docker submitter. 
 
-```
-$ docker run -it \
-  --name job-genomic-ingestion \
-  --rm \
-  -v $PWD/src/genomic-job-save-s3-to-delta.py:/jobs/genomic-job-save-s3-to-delta.py \
-  --network spark-net \
-  spark-submit:3.5.0-python3 \
-    /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    /jobs/genomic-job-save-s3-to-delta.py
-```
+- First we will create a submit custom image like this:
+
+  ```
+  $ docker build -t spark-submit:3.5.0-python3 .
+  ```
+
+- Now we execute this command:
+
+  ```
+  $ docker run -it \
+    --name job-genomic-ingestion \
+    --rm \
+    -v $PWD/src/genomic-job-save-s3-to-delta.py:/jobs/genomic-job-save-s3-to-delta.py \
+    --network spark-net \
+    spark-submit:3.5.0-python3 \
+      /opt/spark/bin/spark-submit \
+      --master spark://spark-master:7077 \
+      /jobs/genomic-job-save-s3-to-delta.py
+  ```
 
 You can check the UIs of Minio and Spark:
 
@@ -177,25 +185,19 @@ http://localhost:8082/
 ## Load Data
 After ingest the dataset into a delta table we can analyze and make some sql queries:
 
-- First we will create a submit custom image like this:
+We can submit our Spark App like previous save
 
-  ```
-  $ docker build -t spark-submit:3.5.0-python3 .
-  ```
-
-- Second We can submit our Spark App:
-
-  ```
-  docker run -it \
-    --name job-genomic-load \
-    --rm \
-    -v $PWD/src/genomic-job-load-delta-to-pandas.py:/jobs/genomic-job-load-delta-to-pandas.py \
-    --network spark-net \
-    spark-submit:3.5.0-python3 \
-      /opt/spark/bin/spark-submit \
-      --master spark://spark-master:7077 \
-      /jobs/genomic-job-load-delta-to-pandas.py
-  ```
+```
+docker run -it \
+  --name job-genomic-load \
+  --rm \
+  -v $PWD/src/genomic-job-load-delta-to-pandas.py:/jobs/genomic-job-load-delta-to-pandas.py \
+  --network spark-net \
+  spark-submit:3.5.0-python3 \
+    /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    /jobs/genomic-job-load-delta-to-pandas.py
+```
 
 ## Spark connect
 Also we have some sample of using Spark connect. For it we create a master connect docker image with Spark Connect and S3 integration for it:
