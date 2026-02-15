@@ -171,11 +171,11 @@
         <mxCell id="Y9sgHKTVxVxpVLCd58U9-47" parent="1" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;flipH=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;legacyAnchorPoints=0;" value="" vertex="1">
           <mxGeometry height="160" width="20" x="640" y="800" as="geometry" />
         </mxCell>
-        <mxCell id="Y9sgHKTVxVxpVLCd58U9-49" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Pipeline 01&lt;/b&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="660" y="725" as="geometry" />
+        <mxCell id="Y9sgHKTVxVxpVLCd58U9-49" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Pipeline&amp;nbsp;&lt;/b&gt;&lt;div&gt;&lt;b&gt;Transformation&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="680" y="725" as="geometry" />
         </mxCell>
-        <mxCell id="Y9sgHKTVxVxpVLCd58U9-50" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Pipeline 02&lt;/b&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="660" y="865" as="geometry" />
+        <mxCell id="Y9sgHKTVxVxpVLCd58U9-50" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;Pipeline Ingestion&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="680" y="865" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
