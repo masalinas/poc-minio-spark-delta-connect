@@ -211,4 +211,4 @@ Actually exist a `spark-client` [python package](https://pypi.org/project/pyspar
 
 ## Links 
 - [Spark Docker Hub](https://hub.docker.com/_/spark)
-- [spark Session Configuration ](https://spark.apache.org/docs/latest/configuration.html)
+- [Spark Session Configuration ](https://spark.apache.org/docs/latest/configuration.html)
