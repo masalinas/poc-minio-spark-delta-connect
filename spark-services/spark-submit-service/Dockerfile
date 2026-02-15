@@ -5,7 +5,7 @@ RUN apt-get update
 RUN apt-get install -y curl
 
 # all python spark dependencies (we must add pyspark too because delta spark install newer versions not compatible with scala)
-RUN pip install delta-spark==3.1.0 pyspark==3.5.0 pandas tables
+RUN pip install delta-spark==3.1.0 pyspark==3.5.0
 
 # all java spark dependencies
 USER spark

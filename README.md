@@ -20,7 +20,7 @@ We need only Minio as persistence service.
 
 - Deploy Minio:
 
-  In docker 20.10.5 (Ubuntu 20.04), we must use a older minio version to start:
+  In docker 20.10.5 (Ubuntu 20.04), we must use an older minio version to start:
 
   ```
   $ docker run -d \
@@ -35,7 +35,7 @@ We need only Minio as persistence service.
         server --console-address ":9001" /data 
   ```
     
-    In docker 28.1.1 (Ubuntu 24.04)
+    In docker 28.1.1 (Ubuntu 24.04) we can use the last one:
     ```
     $ docker run -d \
         --name spark-minio \
@@ -55,7 +55,7 @@ We need only Minio as persistence service.
 
 - We will use the Spark 3.5.0 using the [Spark Docker Image](https://hub.docker.com/_/spark): `spark:3.5.0-python3`
 
-- The spark master delegate the job created to spark workers so we don't need any special image only execute this command using the default spark image:
+- The spark master delegate the job created to spark workers so we don't need any special image only execute this command using the default spark image, publishing the master listener port 7077 and the master UI 8080:
 
   ```
   $ docker run -d \
@@ -70,14 +70,13 @@ We need only Minio as persistence service.
         "
   ```
 
-- To execute our jobs we need integrate delta spark and minio S3 to connect to Minio and create the delta tables inside it. So irst we will create the custom spark worker docker image from worker Dockerfile
-
+- To execute our jobs we need integrate delta spark and minio S3. So first we will create the custom docker spark worker image from the worker Dockerfile:
 
   ```
   $ docker build -t spark-worker:3.5.0-python3 .
   ```
 
-- Now deploy two workers from this image:
+- Now deploy two workers from this image. Publish the Worker UI 8001 and pass S3 Minio configuration:
 
   ```
     $ docker run -d \
@@ -108,27 +107,28 @@ We need only Minio as persistence service.
     ```
 
 ## Execute Transformation Pipeline
-Before ingest the dataset we must first prepate the dataset to be ingest in the second pipeline. In this pipeline we only load the hdf dataset from local and transform in a parquet format and ingest this unique file in a Minio Bucket called genomic-shared. We onlu execute the python script called **hdf_to_parquet.py**
+
+Before ingest the dataset we must first prepate the dataset to be ingest with the second pipeline. In this pipeline we only load the hdf dataset from local and transform in a parquet format and ingest this unique file in a Minio Bucket called **genomic-shared**. We only need execute the python script called **hdf_to_parquet.py**
 
 ## Execute Ingestion Pipeline
 
-With the dataset ppretreated and ingest in Minio, we will try to ingest our genomic dataset as delta table. This dataset it's about 8882 rows (patients) with 19992 columns (gens) + 3 columns (metadata). We must transform the structure of this dataset from (8882,19992+3) to (170917803, 5) shape, to acelerate later analysis.
+With the dataset ppretreated and saved in Minio, we will try to ingest our genomic dataset as delta table. This dataset it's about 8882 rows (patients) with 19992 columns (genes) + 3 columns (metadata). We must transform the structure of this dataset from (8882, 19992+3) to (170917803, 5) shape, to acelerate later analysis.
 
-The original structure dataset (8882,19996) is like this. Where the fhe first 19992 columns represente the genomix expression of each patient, and the last three columns the metadata: unique identifier attached to each patient, the cancer type and tumor name related to this genomic expressions
+In the original structure dataset (8882, 19996) the first 19992 columns represents the genomic expressions of each patient, and the last three columns the metadata of it: unique identifier attached to each patient, the cancer type and the tumor name related to this genomic expressions. This is the estructure:
 
 ```
 gene-1 | gene-2 | ... | gene-19992 | submitter_id | cancer | tumor 
 ```
 
-The new structure dataset (170917803,5) will be transformed like this. Where will be more easy make queries related to any patient attached to cancer, tumor or gene expression:
+The new structure dataset (170917803, 5) will be transformed like this. With this trasnformation will be easier make any query from spark. This is the new structure dataset:
 
 ```
 sample_id | cancer | tumor | gene | expression
 ```
 
-This transformation will be executed in parallel by all spark workers in batches before ingest the result in the minio delta table. This parallel process of transformation and ingestion accelerate the execution of the pipeline considerably. Using two nodes we can ingest 170917803 rows in 7.2 minutes in my Mac M1 laptop in a minio delta table called genomic/gene-expression
+This transformation will be executed in parallel by all spark workers in batches before ingest the result in the minio delta table. This parallel process of transformation and ingestion accelerate the execution of the pipeline considerably. Using two nodes we can trasnform and ingest 170917803 rows in 7.2 minutes in my Mac M1 laptop in a minio delta table called genomic/gene-expression
 
-To execute the ingestion deploy the submitter docker container with the spark app as argument, like his:
+To execute the ingestion we will use a docker submitter. We execute this command:
 
 ```
 $ docker run -it \

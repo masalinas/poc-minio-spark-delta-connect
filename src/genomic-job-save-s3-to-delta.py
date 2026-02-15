@@ -7,7 +7,7 @@ from delta import configure_spark_with_delta_pip
 
 PARQUET_FILE = "s3a://genomic-shared/df_data.parquet"
 BUCKET = "genomic"
-DELTA_TABLE = "test-expression"
+DELTA_TABLE = "genomic-expression"
 OUTPUT_PATH = f"s3a://{BUCKET}/{DELTA_TABLE}"
 
 def sanitize(name: str) -> str:
