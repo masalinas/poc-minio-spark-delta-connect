@@ -1,7 +1,7 @@
 import pandas as pd
 
-H5_FILE = "/Users/miguel/git/poc-minio-delta-connect/datasets/df_data.hdf"
-PARQUET_FILE= "/Users/miguel/git/poc-minio-delta-connect/datasets/df_data.parquet"
+H5_FILE = "/Users/miguel/git/poc-spark-cluster-minio/datasets/df_data.hdf"
+PARQUET_FILE= "/Users/miguel/git/poc-spark-cluster-minio/datasets/df_data.parquet"
 
 print("Reading HDF5...")
 df = pd.read_hdf(H5_FILE)

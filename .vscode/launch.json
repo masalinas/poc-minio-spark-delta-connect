@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-          "name": "PoC Spark Connect",
+          "name": "PoC Spark Cluster",
           "type": "debugpy",
           "request": "launch",
           "program": "${file}",
