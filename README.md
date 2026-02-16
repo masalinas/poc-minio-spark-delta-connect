@@ -120,13 +120,13 @@ In the original structure dataset (8882, 19996) the first 19992 columns represen
 gene-1 | gene-2 | ... | gene-19992 | submitter_id | cancer | tumor 
 ```
 
-The new structure dataset (170917803, 5) will be transformed like this. With this trasnformation will be easier make any query from spark. This is the new structure dataset:
+The new structure dataset (170926608, 5) will be transformed like this. With this trasnformation will be easier make any query from spark. This is the new structure dataset:
 
 ```
 sample_id | cancer | tumor | gene | expression
 ```
 
-This transformation will be executed in parallel by all spark workers in batches before ingest the result in the minio delta table. This parallel process of transformation and ingestion accelerate the execution of the pipeline considerably. Using two nodes we can trasnform and ingest 170917803 rows in 7.2 minutes in my Mac M1 laptop in a minio delta table called genomic/gene-expression
+This transformation will be executed in parallel by all spark workers in batches before ingest the result in the minio delta table. This parallel process of transformation and ingestion accelerate the execution of the pipeline considerably. Using two nodes we can trasnform and ingest 170926608 rows in 7.8 minutes in my Mac M1 laptop in a minio delta table called genomic/gene-expression
 
 To execute the ingestion we will use a docker submitter. 
 

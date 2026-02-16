@@ -39,14 +39,13 @@ print("🟢 Reading Parquet distributed dataset ans sanitize ...")
 spark_df = spark.read.parquet(PARQUET_FILE)
 
 sanitized_columns = [sanitize(c) for c in spark_df.columns]
-
 spark_df = spark_df.toDF(*sanitized_columns)
 
 print("🟢 Transforming wide → long format...")
 id_cols = ["submitter_id", "cancer", "tumor"]
 gene_cols = [c for c in spark_df.columns if c not in id_cols]
 
-BATCH_SIZE = 200   # 🔥 tune this (100–500 depending on memory)
+BATCH_SIZE = 300   # 🔥 tune this (100–500 depending on memory)
 num_batches = (len(gene_cols) + BATCH_SIZE - 1) // BATCH_SIZE
 
 print(f"Total gene columns: {len(gene_cols)}")
@@ -85,7 +84,6 @@ for i in range(0, len(gene_cols), BATCH_SIZE):
     (
         long_df.write
             .format("delta")
-            #.option("maxRecordsPerFile", 500000)
             .mode("append")   # important: append each batch
             .save(OUTPUT_PATH)
     )
