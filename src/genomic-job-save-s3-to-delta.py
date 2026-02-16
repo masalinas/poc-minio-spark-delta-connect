@@ -1,13 +1,12 @@
 import time
-import math
 import re
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import expr, col
+from pyspark.sql.functions import col
 from delta import configure_spark_with_delta_pip
 
 PARQUET_FILE = "s3a://genomic-shared/df_data.parquet"
 BUCKET = "genomic"
-DELTA_TABLE = "genomic-expression"
+DELTA_TABLE = "xxx-expression"
 OUTPUT_PATH = f"s3a://{BUCKET}/{DELTA_TABLE}"
 
 def sanitize(name: str) -> str:
@@ -19,7 +18,6 @@ builder = (
         .appName("genomic-delta-ingestion")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-        .config("spark.sql.shuffle.partitions", "8")   # good for 2 workers
 )
 
 spark = configure_spark_with_delta_pip(
@@ -87,6 +85,7 @@ for i in range(0, len(gene_cols), BATCH_SIZE):
     (
         long_df.write
             .format("delta")
+            #.option("maxRecordsPerFile", 500000)
             .mode("append")   # important: append each batch
             .save(OUTPUT_PATH)
     )

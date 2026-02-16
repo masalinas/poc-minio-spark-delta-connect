@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 from delta import configure_spark_with_delta_pip
 
-start_time = time.process_time()
+start_time = time.perf_counter()
 
 print("🟢 Configure Spark Session with AWS(Minio) support")
 builder = SparkSession.builder.appName("spark_job_load_genomic_app") \
@@ -26,9 +26,12 @@ sc._jsc.hadoopConfiguration().set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFi
 print("🟢 Read Delta Table from Minio using spark connect")
 row_count = (
     spark.read.format("delta")
-    .load("s3a://genomic/gene-expression")
+    .load("s3a://genomic/xxx-expression")
     .count()
 )
+
+print("🟢 Show row count")
+print(row_count)
 
 df = (
     spark.read.format("delta")
@@ -36,23 +39,23 @@ df = (
     .where(col("sample_id") == "TCGA-E7-A7DV")
 )
 
+print("🟢 Show Spark Dataframe filterred")
 df.show()
 
-end_time= time.process_time()
+end_time= time.perf_counter()
 print("Time spent: " + str(end_time - start_time) + " seconds")
 
-start_time = time.process_time()
-
 # convert to Pandas
+start_time = time.perf_counter()
+
+print("🟢 Convert Spark Dataframe to Pandas")
 pdf = df.toPandas()
 print("Dataset shape: " + str(pdf.shape))
 
 print(pdf.head(5))
 
-# Stop spark
-spark.stop()
-
-end_time= time.process_time()
+end_time= time.perf_counter()
 print("Time spent: " + str(end_time - start_time) + " seconds")
 
-print(row_count)
+# Stop spark
+spark.stop()
