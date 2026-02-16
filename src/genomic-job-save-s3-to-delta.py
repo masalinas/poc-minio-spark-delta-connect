@@ -35,8 +35,9 @@ sc._jsc.hadoopConfiguration().set("fs.s3a.path.style.access", "true")
 sc._jsc.hadoopConfiguration().set("fs.s3a.connection.ssl.enabled", "false")
 sc._jsc.hadoopConfiguration().set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 
-print("🟢 Reading Parquet distributed dataset ans sanitize ...")
+print("🟢 Reading Parquet distributed dataset and sanitize ...")
 spark_df = spark.read.parquet(PARQUET_FILE)
+#spark_df = spark.read.parquet(PARQUET_FILE).repartition(40)
 
 sanitized_columns = [sanitize(c) for c in spark_df.columns]
 spark_df = spark_df.toDF(*sanitized_columns)
@@ -45,7 +46,7 @@ print("🟢 Transforming wide → long format...")
 id_cols = ["submitter_id", "cancer", "tumor"]
 gene_cols = [c for c in spark_df.columns if c not in id_cols]
 
-BATCH_SIZE = 300   # 🔥 tune this (100–500 depending on memory)
+BATCH_SIZE = 300   # tune this (100–500 depending on memory)
 num_batches = (len(gene_cols) + BATCH_SIZE - 1) // BATCH_SIZE
 
 print(f"Total gene columns: {len(gene_cols)}")
