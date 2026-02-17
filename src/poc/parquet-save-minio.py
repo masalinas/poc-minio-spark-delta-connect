@@ -7,10 +7,10 @@ from delta import configure_spark_with_delta_pip
 INPUT_PATH = "s3a://genomic-shared/df_data.parquet"
 OUTPUT_PATH = "s3a://genomic-shared/df_data_long.parquet"
 
-start_time= time.perf_counter()
-
 def sanitize(name: str) -> str:
     return re.sub(r"[^\w]", "_", name)
+
+start_time= time.perf_counter()
 
 builder = SparkSession.builder \
     .appName("save-parquet-minio")
