@@ -1,8 +1,9 @@
 import random
 from pyspark.sql import SparkSession
 
-builder = SparkSession.builder.appName("spark_connect_pi").remote("sc://localhost:15002")
-spark = builder.getOrCreate()
+spark = SparkSession.builder.appName("spark_connect_pi") \
+    .remote("sc://localhost:15002") \
+    .getOrCreate()
 
 n = 200000
 df = spark.createDataFrame([(random.random(), random.random()) for _ in range(n)], ["x", "y"])
