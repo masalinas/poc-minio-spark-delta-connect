@@ -69,7 +69,7 @@ df_long = df_long.withColumn("expression", df_long["expression"].cast("float"))
 print("🟢 Write as PARQUET (no delta)")
 (
     df_long
-        #.repartition(12)   # tune for your cluster
+        .repartition(12)   # tune for your cluster
         .write
         .mode("overwrite")
         .parquet(OUTPUT_PATH)
