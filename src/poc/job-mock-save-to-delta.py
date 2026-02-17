@@ -23,7 +23,6 @@ sc._jsc.hadoopConfiguration().set("fs.s3a.path.style.access", "true")
 sc._jsc.hadoopConfiguration().set("fs.s3a.connection.ssl.enabled", "false")
 sc._jsc.hadoopConfiguration().set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 
-# Create a DataFrame
 print("🟢 Create mock Dataframe")
 df = spark.createDataFrame(
     [
@@ -35,11 +34,9 @@ df = spark.createDataFrame(
 
 start_time = time.perf_counter()
 
-# Write Delta Table to Minio using Spark Connect
-print("🟢 Write Dataframe to Delta tables")
+print("🟢 Write Delta Table to Minio using Spark Connect")
 df.write.mode("overwrite").format("delta").save("s3a://delta-bucket/my_table")
 
-# Read Delta Table from Minio
 print("🟢 Read Dataframe to Delta tables")
 df = spark.read.format("delta").load("s3a://delta-bucket/my_table")
 
@@ -48,5 +45,4 @@ df.show()
 end_time= time.perf_counter()
 print(end_time - start_time, " seconds")
 
-# Stop spark
 spark.stop()

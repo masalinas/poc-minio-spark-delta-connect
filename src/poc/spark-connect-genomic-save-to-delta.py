@@ -9,7 +9,8 @@ BUCKET = "genomic"
 DELTA_TABLE = "test-expression"
 
 spark = SparkSession.builder.appName("spark_connect_gen") \
-    .remote("sc://localhost:15002").getOrCreate()
+    .remote("sc://localhost:15002") \
+    .getOrCreate()
 
 print("🟢 Read H5 Dataset")
 pdf = pd.read_hdf(H5_FILE)
@@ -96,3 +97,5 @@ for i in range(num_chunks):
         f"Chunk time: {loop_time:.2f}s | "
         f"Elapsed: {elapsed/60:.2f} min"
     )
+
+spark.stop()
