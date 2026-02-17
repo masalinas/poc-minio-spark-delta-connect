@@ -7,6 +7,7 @@ INPUT_PATH = "s3a://genomic-shared/df_data_long.parquet"
 
 start_time= time.perf_counter()
 
+print("🟢 Create local Spark Session")
 builder = SparkSession.builder \
     .appName("load-parquet-minio")
 
@@ -24,9 +25,7 @@ sc._jsc.hadoopConfiguration().set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFi
 
 spark_df = spark.read.parquet(INPUT_PATH)
 
-# ----------------------------------
-# Read PARQUET (no delta)
-# ----------------------------------
+print("🟢 Read PARQUET (no delta)")
 spark_df.createOrReplaceTempView("genomic")
 
 result = spark.sql("""
@@ -39,3 +38,5 @@ result.show()
 
 end_time= time.perf_counter()
 print(end_time - start_time, " seconds")
+
+spark.stop()
